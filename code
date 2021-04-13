@@ -1,0 +1,680 @@
+#include <iostream>
+#include <stdio.h>
+#include <fstream>
+#include <iomanip>//для ширина,если буду использовать
+#include <string>
+#include <ctime>
+#include <stdio.h>
+#include <time.h>
+#include <stddef.h>
+
+
+using namespace std;
+//создание структуры данных о студентах
+struct student
+{   string niwTime, Time;
+    string name,surname, middlename;//имя,фамилия,отчество студента
+    short  group,number,estimates[8],mean,formofeducation;//номер в списке, номер группы,номер в списке,оценки за прошлый семестр,форма обучения, номер в списке студента
+    int ID; // номер читательского билета студента
+    bool sex; //пол студента
+};
+struct library
+{
+    string author,name; //ФИ автора, название
+    short year, page, ID; //год издания, количество страниц, номер студенческого билета
+};
+
+
+
+string getname(){
+    while(true){
+        cout << "Введите имя студента:";
+        string a;
+        cin.clear(); //очищение буфера от лишнего мусора
+        cin>>a; //ввод переменной с клавиатуры
+        if (cin.fail()){ //проверка на ввод данных, является ли кор-ректным для данного типа
+            cin.clear();
+            cin.ignore(32767,'\n'); //пропуск символов
+            cout<<"Вы ввели некорректное значение.Попробуйте еще"<<endl;
+    }
+        else{
+            cin.clear();
+            cin.ignore(cin.rdbuf()->in_avail()); //вызываем количе-ство символов буфера и игнорируем его
+            return a;}
+    }
+}//Запись фамилии студента
+
+string getsurname(){
+    while(true){
+        cout << "Введите фамилию студента:";
+        cin.clear();
+        string a;
+        cin>>a;
+        if (cin.fail()){
+        cin.clear();
+        cin.ignore(32767,'\n');
+        cout<<"Вы ввели некорректное значение.Попробуйте еще"<<endl;
+    }
+        else{
+            
+            cin.ignore(cin.rdbuf()->in_avail());
+            return a;}
+        
+    }
+}//Запись фамилии студента
+
+string getmiddlename(){
+    while(true){
+        cin.clear();
+        cout << "Введите отчество студента:";
+        string a;
+        cin>>a;
+        if (cin.fail()){
+            cin.clear();
+            cin.ignore(32767,'\n');
+            cout<<"Вы ввели некорректное значение.Попробуйте еще"<<endl;
+    }
+        else{
+            cin.clear();
+            cin.ignore(cin.rdbuf()->in_avail());
+            return a;}
+        
+    }
+}//Запись отчества студента
+
+short getsex(){
+    while(true){
+        cin.clear();
+        cout << "Введите пол студента. Мужской - 0, женский - 1"<< endl;
+        short a;
+        a=0;
+        cin>>a;
+        if (cin.fail()){
+               cin.clear();
+               cin.ignore(32767,'\n');
+               cout<<"Вы ввели некорректное значение. Данные должны быть введены латинскими цифрами. Попробуйте еще"<<endl;
+        }
+        if ((a!=0)&&(a!=1)){
+                cin.clear();
+                cin.ignore(32767,'\n');
+                cout<<"Вы ввели некорректное значrение. Данные долж-ны быть введены латинскими цифрами. Попробуйте еще"<<endl;
+                cout << "Укажите пол студента: 0 - мужской, 1 - жен-ский"<<endl;
+            }
+        else{
+                cin.ignore(cin.rdbuf()->in_avail());
+       return a;}
+        
+    }
+}//Ввод данных о поле студента
+
+short getgroup(){
+    while(true){
+        cin.clear();
+        int short a;
+        a=0;
+        cout << "Укажите номер группы студента:"<<endl;
+        cin >> a;
+        if (cin.fail()){
+             cin.clear();
+             cin.ignore(32767,'\n');
+             cout<<"Вы ввели некорректное значение. Данные должны быть введены латинскими цифрами. Попробуйте еще"<<endl;
+        }
+        else {
+             cin.clear();
+             cin.ignore(cin.rdbuf()->in_avail());}
+             return a;}
+}//Ввод номер группы студента
+
+
+short getnumber(){
+    while(true){
+        cin.clear();
+        int short a;
+        a=0;
+        cout << "Укажите номер студента в списке группы:"<<endl;
+        cin >> a;
+        if (cin.fail()){
+            cin.clear();
+            cin.ignore(32767,'\n');
+            cout<<"Вы ввели некорректное значение. Данные должны быть введены латинскими цифрами. Попробуйте еще"<<endl;
+        }
+        else{
+            cin.clear();
+            cin.ignore(cin.rdbuf()->in_avail());}
+            return a;}
+}//Ввод номер студента в списке группы
+
+short getformfeducation(){
+        while(true){
+            cin.clear();
+            cout << "Укажите форму обучения студента:0 - очная, 1 - очно-заочная, 2 - заочная"<< endl;
+            short a;
+            a=0;
+            cin>>a;
+            if (cin.fail()){
+                cin.clear();
+                cin.ignore(32767,'\n');
+                   cout<<"Вы ввели некорректное значение. Данные должны быть введены латинскими цифрами. Попробуйте еще"<<endl;
+            }
+            if ((a!=0)&&(a!=1)&& (a!=2)){
+                cin.clear();
+                cin.ignore(32767,'\n');
+                cout<<"Вы ввели некорректное значrение. Данные долж-ны быть введены латинскими цифрами. Попробуйте еще"<<endl;
+                    
+                }
+            else{
+                cin.ignore(cin.rdbuf()->in_avail());
+           return a;}
+            
+        }
+}//Ввод данных о форме обучения студента
+
+short getestimates(){
+        while(true){
+               cin.clear();
+               int short a;
+               a=0;
+               cout << "Введите оценки за прошлый семестр: "<<endl;
+               cin >> a;
+               if (cin.fail()){
+                   cin.clear();
+                   cin.ignore(32767,'\n');
+                   cout<<"Вы ввели некорректное значение. Данные должны быть введены латинскими цифрами. Попробуйте еще"<<endl;
+               }
+               else{
+                   cin.clear();
+                   cin.ignore(cin.rdbuf()->in_avail());}
+                   return a;
+   }
+}
+
+short getestimates1(){
+        while(true){
+        cin.clear();
+        int short a;
+        a=0;
+        cout << "Введите оценки за экзамен: "<<endl;
+        cin >> a;
+        if (cin.fail()){
+            cin.clear();
+            cin.ignore(32767,'\n');
+            cout<<"Вы ввели некорректное значение. Данные должны быть введены латинскими цифрами. Попробуйте еще"<<endl;
+        }
+        else{
+            cin.clear();
+            cin.ignore(cin.rdbuf()->in_avail());}
+            return a;}
+}
+       
+int getk(){
+    while(true){
+        int k;
+        cin>>k;
+        if (cin.fail()){
+            cin.clear ();
+            cin.ignore(32767,'\n');
+            cout<<"Вы ввели некорректное значение.Данные должны быть введены латинскими цифрами.Попробуйте еще"<<endl;
+               }
+            else{
+                cin.clear();
+                cin.ignore(cin.rdbuf()->in_avail());
+                return k;
+            }
+        }
+    }
+
+void IDstudent (int ID){
+    ID=0;
+    srand(0);
+    ID = 1 + rand() % 10;
+    
+}
+
+void printData(student Obj) {
+cout.width(20); cout.fill(' ');
+cout << left << Obj.surname << " ";
+cout.width(20); cout.fill(' ');
+cout << left << Obj.name << " ";
+cout.width(20); cout.fill(' ');
+cout << left << Obj.middlename << " ";
+cout.width(4);cout.fill(' ');
+if (Obj.sex == 1)
+cout << "Ж"<<" ";
+else
+cout << "М"<<" ";
+if (Obj.formofeducation == 0) {
+    cout.width(20); cout.fill(' ');
+cout << left << "Очная ";
+}
+else if (Obj.formofeducation == 1) {
+    cout.width(20); cout.fill(' ');
+cout << left << "Очно-заочная ";
+}
+else if (Obj.formofeducation == 2) {
+    cout.width(20); cout.fill(' ');
+    cout << left << "Заочная ";
+}
+cout.width(8); cout.fill(' ');
+cout << left << Obj.group ;
+cout.width(4); cout.fill(' ');
+cout << left << Obj.number << " ";
+cout.width(3); cout.fill(' ');
+for (int j=0;j<3;j++)
+cout << left << Obj.estimates[j] << " ";
+cout.width(6); cout.fill(' ');
+for (int j = 3; j < 8; ++j)
+    cout << " " << left<< Obj.estimates[j] << " ";
+cout.width (8); cout.fill (' ');
+cout << "Номер студенческого билета:"<< Obj.ID;
+cout << endl;
+}//все данные о студенте
+
+
+
+int mean()
+{
+    setlocale(LC_ALL, "Russian");
+    int const N=100;
+    int sumstudent=0;
+    student s[N];
+    cout << "Введите количество студентов:"<<endl;
+    cin >> sumstudent;
+    for (int i=0; i<sumstudent; i++){
+    system("clear");
+        //запись перемнных с учетом проверки
+       s[i].name = getname();
+       s[i].surname =getsurname();
+       s[i].middlename = getmiddlename();
+       s[i].sex = getsex();
+       s[i].group = getgroup();
+       s[i].number = getnumber();
+       s[i].formofeducation = getformfeducation();
+    for (int j=0; j<3; j++){
+            s[i].estimates[j] = getestimates();
+            s[i].mean = s[i].mean + s[i].estimates[j];}
+    for (int j=3; j<8; j++){
+            s[i].estimates [j] = getestimates1();
+            s[i].mean = s[i].mean + s[i].estimates[j];}
+            s[i].mean = s[i].mean/8;
+       IDstudent(s[i].ID);
+       time_t rawtime;
+       struct tm * timeinfo;
+       char temp [80];                                // строка, в которой будет храниться текущее время
+       time ( &rawtime );                               // текущая дата в секундах
+       timeinfo = localtime ( &rawtime );               // текущее локальное время, представленное в структуре
+       strftime (temp,17,"%H:%M %d.%m.%Y",timeinfo);// форматируем строку времени
+       s[i].Time = temp;
+    }
+    
+    cout<<endl;
+    for (int i=0;i<sumstudent;i++)
+        printData(s[i]);
+    cout << endl;
+    int menu;// создание меню
+    bool v = 1, p =0; //переменная выхода из меню
+    while(v == true){ //вывод меню для выбора функции
+    cout << endl;
+    cout << "1. Создание новой записи о студенте" << endl;
+    cout << "2. Внесение изменений уже существующих записах" << endl;
+    cout << "3. Вывод данных о студентах" << endl;
+    cout << "4. Вывод данных о студентах группы N" << endl;
+    cout << "5. Вывод топ самых умных студентов с наивысшим по рей-тингу среднем баллом за предыдшую сессию" <<endl;
+    cout << "6. Вывод количества студентов мужского и женского пола" << endl;
+    cout << "7. Определение количество студентов, которые получат степендию" <<endl;
+    cout << "8. Вывод данных о студентах, которые не получат степен-дию " <<endl;
+    cout << "9. Вывод всех записей, сделанных в день, которые введет пользователь. Вывод всех записей, сделанных после полудня. Вывод всех записей, сделанных до полудня." <<endl;
+    cout << "10. Вывод данных о студентах, имеющих номер в списке - к" <<endl;
+    cout << "11. Вывод о студентах в файл students" <<endl;
+    cout << "0. Выход из меню"<<endl;
+    cin >> menu;
+    
+    switch (menu){
+        case 1: {//создание новой записи о студенте
+        cout << "Введите данные о новом студенте:";
+        for  (int i=sumstudent;i< (sumstudent+1);i++){
+                 system("clear");
+                    s[i].name = getname();
+                    s[i].surname =getsurname();
+                    s[i].middlename = getmiddlename();
+                    s[i].sex = getsex();
+                    s[i].group = getgroup();
+                    s[i].number = getnumber();
+                    s[i].formofeducation = getformfeducation();
+            for (int j=0; j<3; j++){
+                    s[i].estimates[j] = getestimates();
+                    s[i].mean = s[i].mean + s[i].estimates[j];}
+            for (int j=3; j<8; j++){
+                    s[i].estimates [j] = getestimates1();
+                    s[i].mean = s[i].mean + s[i].estimates[j];}
+                    s[i].mean = s[i].mean/8;
+                IDstudent(s[i].ID);
+                time_t rawtime;
+                struct tm * timeinfo;
+                char temp [80];                                // строка, в которой будет храниться текущее время
+                time ( &rawtime );                               // текущая дата в секундах
+                timeinfo = localtime ( &rawtime );               // текущее локальное время, представленное в структуре
+                strftime (temp,17,"%H:%M %d.%m.%Y",timeinfo);// фор-матируем строку времени
+                s[i].Time = temp;
+            }
+            for (int i=0; i<sumstudent+1; i++){
+                printData(s[i]);
+            }
+            sumstudent++;
+        }break;
+ 
+        case 2: {//внесение измененний
+            system("clear");
+            cout << "Введите номер студента, данные о котором вы хо-тите изменить";
+            int k = getk();
+            cin >> k;
+            for (int i=0; i<sumstudent; i++){
+                if (i==k){
+               system("clear");
+               s[i].name = getname();
+               s[i].surname =getsurname();
+               s[i].middlename = getmiddlename();
+               s[i].sex = getsex();
+               s[i].group = getgroup();
+               s[i].number = getnumber();
+               s[i].formofeducation = getformfeducation();
+            for (int j=0; j<3; j++){
+                    s[i].estimates[j] = getestimates();
+                    s[i].mean = s[i].mean + s[i].estimates[j];}
+            for (int j=3; j<8; j++){
+                    s[i].estimates [j] = getestimates1();
+                    s[i].mean = s[i].mean + s[i].estimates[j];}
+                    s[i].mean = s[i].mean/8;
+               IDstudent(s[i].ID);
+               time_t rawtime;
+               struct tm * timeinfo;
+               char temp [80];                                // строка, в которой будет храниться текущее время
+               time ( &rawtime );                               // текущая дата в секундах
+               timeinfo = localtime ( &rawtime );               // текущее локальное время, представленное в структуре
+               strftime (temp,17,"%H:%M %d.%m.%Y",timeinfo);// фор-матируем строку времени
+               s[i].Time = temp;
+            }
+            }
+            for (int i=0; i<sumstudent; i++){
+                printData(s[i]);
+            }
+        }break;
+        
+        case 3: {//вывод данных о студентах
+            
+            for (int i=0; i<sumstudent; i++){
+                printData(s[i]);
+            }
+        }break;
+            
+        case 4: {//вывод данных о студентах группы N
+            cout << "Введите номер группы студента:";
+            int numbergroup,test = 0;
+            cin >> numbergroup;
+            for (int i=0; i<sumstudent; i++){
+                if(s[i].group==numbergroup){
+                    test++;
+                }
+            }
+            if (test==0){
+                cout << "Нет студентов данной группы" << endl;
+                }
+            else {
+                
+                for (int i=0; i<sumstudent; i++){
+                if(s[i].group==numbergroup){
+                    printData(s[i]);
+                }
+                }
+            }
+        }
+                break;
+            
+        case 5:{//вывод рейтинга студентов
+            int temp;
+            string temps;
+            // Сортировка массива пузырьком
+            for (int i = 0; i < sumstudent - 1; i++) {
+                for (int j = 0; j < sumstudent - i - 1; j++) {
+                    if (s[j].mean < s[j + 1].mean) {
+                        // меняем элементы местами
+                temps= s[j].name;
+                        s[j].name = s[j + 1].name;
+                        s[j + 1].name = temps;
+                temps= s[j].surname;
+                        s[j].surname = s[j + 1].surname;
+                        s[j + 1].surname = temps;
+                temps= s[j].middlename;
+                        s[j].middlename = s[j + 1].middlename;
+                        s[j + 1].middlename = temps;
+                temp= s[j].sex;
+                        s[j].sex = s[j + 1].sex;
+                        s[j + 1].sex = temp;
+                temp= s[j].group;
+                        s[j].group = s[j + 1].group;
+                        s[j + 1].group = temp;
+                temp= s[j].number;
+                        s[j].number = s[j + 1].number;
+                        s[j + 1].number = temp;
+                temp= s[j].formofeducation;
+                        s[j].formofeducation = s[j + 1].formofeducation;
+                        s[j + 1].formofeducation = temp;
+                for (int k=0; k<8; k++){
+                        temp= s[j].estimates[k];
+                        s[j].estimates[k] = s[j + 1].estimates[k];
+                        s[j + 1].estimates[k] = temp;
+                        }
+                        temp= s[j].ID;
+                        s[j].ID = s[j + 1].ID;
+                        s[j + 1].ID = temp;
+                        temp= s[j].mean;
+                        s[j].mean = s[j + 1].mean;
+                        s[j + 1].mean = temp;
+                    }
+                }
+            }
+            for ( int i=0; i<6; i++){
+                printData(s[i]);
+            }
+        }break;
+            
+        case 6: { //вывод количество студентов мужского и женского пола
+            int women=0;
+            int man=0;
+            for (int i=0; i<sumstudent; i++){
+                if (s[i].sex==1)
+                    women++;
+                if (s[i].sex==0)
+                    man++;
+            }
+            cout << endl;
+            cout << "Количество студентов женского по-ла:"<<women<<endl;
+            cout << "Количество студентов мужского по-ла:"<<man<<endl;
+        } break;
+        
+        case 7: {//вывод данных о студентах, которые получат стипен-дию
+            int grant=0;
+            for (int i=0; i<sumstudent; i++){
+                for ( int j=0; j<8; j++){
+                    if ((s[i].estimates[j] != 2) && (s[i].estimates[j]!=3) && (s[i].estimates[j]!=1)){
+                        grant++;
+                
+                }
+            }
+        }
+    }break;
+            
+        case 8: { //вывод данных о студентах, которые не получат стипендию
+          
+            for (int i=0; i<sumstudent; i++){
+                  for ( int j=0; j<8; j++){
+                      if ((s[i].estimates[j] == 2) || (s[i].estimates[j] == 3) || (s[i].estimates[j] == 1)){
+                  system("clear");
+                  printData(s[i]);
+              }
+        }
+    }
+}break;
+        
+        case 9: {//вывод данных о студентах были сделанны до полудня
+            int numberstudent = 0, comparison;
+            string date;
+            cout << endl << "Введите день в формате дд.мм.гггг: ";
+            cout << endl;
+            for (int i = 0; i < sumstudent; ++i) {
+                comparison = 0;
+                for (int j = 6; j < 16; ++j) {
+                    if (date[j - 6] == s[i].Time[j])
+                        ++comparison;
+                }
+                if (comparison == 10)
+                    ++numberstudent;
+            }
+            if (numberstudent == 0)
+                cout << "Нет записей, сделанных " << date << "." << std::endl;
+            else {
+                int am = 0, pm = 0;
+                for (int i = 0; i < sumstudent; ++i) {
+                    if ((s[i].Time[0] == 0 || s[i].Time[0] == 1) && s[i].Time[1] < 2)
+                        ++am;
+                    else
+                        ++pm;
+                }
+                cout << "Информация о студентах, записи которых были сделаны в этот день:" << endl;
+                if (am == 0) {
+                    cout << "Нет записей, сделанных в этот день до полудня."  << endl;
+                    cout << "Записи, сделанные в этот после полудня:" << endl;
+                    
+                    for (int i = 0; i < sumstudent; ++i) {
+                        if (!((s[i].Time[0] == 0 || s[i].Time[0] == 1) && s[i].Time[1] < 2))
+                        printData(s[i]);
+                    }
+                }
+                else if (pm == 0) {
+                    cout << "Записи, сделанные в этот до полудня:" << endl;
+                    
+                    for (int i = 0; i < sumstudent; ++i) {
+                        if ((s[i].Time[0] == 0 || s[i].Time[0] == 1) && s[i].Time[1] < 2)
+                            printData(s[i]);                    }
+                    cout << "Нет записей, сделанных в этот после по-лудня." << endl;
+                }
+                else {
+                    cout << "Записи, сделанные в этот до полудня:" << endl;
+                    
+                    for (int i = 0; i < sumstudent; ++i) {
+                        if ((s[i].Time[0] == 0 || s[i].Time[0] == 1) && s[i].Time[1] < 2)
+                            printData(s[i]);
+                    }
+                    cout << "Записи, сделанные в этот после полу-дня:" << endl;
+                    
+                    for (int i = 0; i < sumstudent; ++i) {
+                        if (!((s[i].Time[0] == 0 || s[i].Time[0] == 1) && s[i].Time[1] < 2))
+                        printData(s[i]);
+                    }
+                }
+            }
+        cout << endl;
+        } break;
+            
+        case 10: {//студент под порядковвым номером, введенным поль-зователем
+            int k;
+            cout << "Введите номер студента:";
+            cin>> k;
+            for (int i=0; i<sumstudent;i++){
+                if ( i == k)
+                    printData(s[i]);
+        }
+        }break;
+            
+        case 11: {
+            ofstream fout ;
+            fout.open ("student.txt");
+            if (fout.is_open()) {
+                for ( int i=0; i < sumstudent; i++){
+                fout << "Данные о студентах:" <<endl;
+                fout << "Имя:" << s[i].name <<endl;
+                fout << "Фамилия:" <<s[i].surname <<endl;
+                fout << "Отчество:" << s[i].middlename << endl;
+                fout << "Пол студента:" << s[i].sex << endl;
+                fout << "Номер группы:" << s[i].group << endl;
+                fout << "Порядковый номер студента в списке группы:" << s[i].number << endl;
+                fout << "Форма обучения:" << s[i].formofeducation<<endl;
+                fout << "Оценки за прошлый семестр:"<< endl;
+                for (int j=0; j<3; j++)
+                    fout << s[i].estimates[j];
+                fout << "Оценки за экзамен: "<<endl;
+                for (int j=4; j<8; j++)
+                fout << s[i].estimates[j];
+            }
+        }
+        fout.close();
+        } break;
+            
+        case 0: {
+            v = 0; p = 1;
+        }
+    }
+    int const l=6;
+    library library[l] = {
+        {"Достоевский Ф. М.", "Преступление и наказание", 2001, 583, 0},
+        {"Булгаков М. А.", "Мастер и Маргарита", 2003, 367, 0},
+        {"Джон Фаулз", "Коллекционер",2016 , 398, 0},
+        {"Чак Паланик", "Колыбельная", 2002, 285, 0},
+        {"Зигмуд Фрейд", "Введенеи в психанализ", 2017, 542, 0},
+        {"Сергей Довлатов", "Заповедник", 2018, 155, 0},
+    };
+    int library_menu;
+    while (p == true)
+    { cout<< endl;
+        cout << "Выберите пункт меню:"<<endl;
+        cout << "1. Взять книгу" << endl;
+        cout << "2. Вернуть книгу" << endl;
+        cout << "3. Выйти из меню" << endl;
+        cin >> library_menu;
+        switch (library_menu){
+            case 1:{
+                int number;
+                cout << "Выберите книгу, которую хотите взять в биб-лиотеке:" << endl;
+                for (int i=0; i<l; i++){
+                    if ( library[i].ID == 0){
+                    cout << i << ". ";
+                    cout << library[i].author<< " "<< endl;
+                    cout << library[i].name << " " << endl;
+                    cout << library[i].year << " "<<endl;
+                    cout << library[i].page << " "<< endl;
+                    cout << endl;
+                    }
+                }
+                cin >> number;
+                for ( int i=0; i<l; i++){
+                    if (i == number){
+                        cout << "Введите номер своего студенческого билета:" <<endl;
+                        cin >> library[i].ID;
+                        cout << "Книга успешно записана на ваше имя" <<endl;
+                    }
+                }
+            } break;
+                
+            case 2:{
+                int number;
+                cout << "Введите номер своего студенческого билета:" <<endl;
+                cin >> number;
+                for (int i=0;i<l;i++){
+                if (number == library[i].ID)
+                    library[i].ID = 0;
+                 else {
+                    cout << "Нет книг, записанных на ваше имя" << endl;
+                   }
+                }
+            }break;
+                
+          case 3: p =0;
+      }
+   }
+}
+    system("pause");
+    return 0;
+}
+
+
+
+ 
